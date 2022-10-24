@@ -1,24 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Questions from "./questions.json";
+
+import DynamicForm from "./components/DynamicForm/DynamicForm";
+import { StyledLayout } from "./components/styled/Layout.styled";
+import { QuestionInterface } from "./interface/data.interface";
 
 function App() {
+  const [loading, setLoading] = React.useState(true);
+  const [data, setData] = React.useState<QuestionInterface[]>([]);
+
+  React.useEffect(() => {
+    setLoading(true);
+
+    // Fake async api call
+    setTimeout(() => {
+      const results = Questions.questions as never as QuestionInterface[];
+
+      setData(results);
+
+      setLoading(false);
+    }, 2000);
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <StyledLayout>
+        <h1>Dynamic Form</h1>
+        <div>
+          <div>
+            {!loading && <DynamicForm data={data} />}
+
+            {loading && <h1>Loading questions ...</h1>}
+          </div>
+        </div>
+      </StyledLayout>
     </div>
   );
 }
